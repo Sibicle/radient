@@ -1,0 +1,27 @@
+{
+  "name": "radient",
+  "version": "0.0.1",
+  "description": "Gradient creation and manipulation library",
+  "keywords": [
+    "color",
+    "colour",
+    "gradient",
+    "rainbow",
+    "fade"
+  ],
+  "authors": [
+    "Jason Nedell <jason@nedell.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/sibicle/radient.git"
+  },
+  "files": [
+    "LICENSE",
+    "index.js"
+  ],
+  "dependencies": {
+    "color": "^0.8.0"
+  }
+}
