@@ -19,8 +19,22 @@ Radient.prototype.distribute = function()
     this.stops[i].location = i * n;
 }
 
-Radient.prototype.stop = function(color, location)
+Radient.prototype.stop = function(c, l)
 {
+  l = parseFloat(l);
+
+  if(isNaN(l)) throw new Error("Unable to determine stop location: " + l);
+
+  this.stops.push({ color: new color(c), location: l });
+
+  this.sort();
+}
+
+Radient.prototype.sort = function()
+{
+  this.stops.sort(function (a, b) {
+    return a.location - b.location;
+  });
 }
 
 Radient.prototype.color = function(location)
@@ -33,13 +47,14 @@ Radient.prototype.angle = function(degrees)
 
 Radient.prototype.array = function(stops)
 {
+  if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
 }
 
 Radient.prototype.toString = function()
 {
-  if (this.stops.length == 0) throw new Error("Gradients must have at least two stops");
+  if (this.stops.length == 0) return 'empty gradient';
 
-  r = [] ;
+  r = [];
 
   this.stops.forEach(function(element) {
     r.push(element.location + ' ' + element.color.hexString());
@@ -49,3 +64,8 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
+
+var g = new Radient();
+g.stop('#fff', .2);
+g.stop('#fff', 0);
+console.log(g + '');
