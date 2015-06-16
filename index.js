@@ -23,7 +23,7 @@ Radient.prototype.stop = function(c, l)
 {
   l = parseFloat(l);
 
-  if(isNaN(l)) throw new Error("Unable to determine stop location: " + l);
+  if(isNaN(l)) throw new Error("Invalid stop location: " + l);
 
   if (stop = this.stopAt(l))
     stop.color = new color(c);
@@ -47,15 +47,49 @@ Radient.prototype.sort = function()
   });
 }
 
-Radient.prototype.color = function(location)
+Radient.prototype.color = function(l)
 {
+  if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
+
+  l = parseFloat(l);
+
+  if(isNaN(l) || l < 0 || l > 1)
+    throw new Error("Invalid stop location: " + l);
+
+  left = null;
+  right = null;
+
+  for (var i = 0; i < this.stops.length; i++)
+  {
+    if (this.stops[i].location == l)
+      return this.stops[i].color;
+
+    if (this.stops[i].location < l)
+      left = this.stops[i];
+
+    if (this.stops[i].location > l) {
+      right = this.stops[i];
+      break;
+    }
+  }
+
+  if      (! left)  return right.color;
+  else if (! right) return left.color;
+
+  ratio = ( l - left.location ) / ( right.location - left.location);
+
+  console.log(ratio);
+
+  return left.color.mix(right.color, ratio);
 }
 
-Radient.prototype.angle = function(degrees)
+Radient.prototype.angle = function(deg)
 {
+  l = deg / 360;
+  return this.color(l);
 }
 
-Radient.prototype.array = function(stops)
+Radient.prototype.array = function(num)
 {
   if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
 }
@@ -74,3 +108,5 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
+
+g = new Radient();
