@@ -1,18 +1,51 @@
-var color = require("color"),
+var color = require("color");
 
 var Radient = function(obj) {
+  if (obj instanceof Radient) return obj;
+
+  this.stops = [];
+
+  for (var i = 0; i < arguments.length; i++)
+    this.stops.push({ color: new color(arguments[i]), location: null });
+
+  this.distribute();
 }
 
-Color.prototype.stop = function(stop) {
+Radient.prototype.distribute = function()
+{
+  n = 1 / (this.stops.length - 1);
+
+  for (var i = 0; i < this.stops.length; i++)
+    this.stops[i].location = i * n;
 }
 
-Color.prototype.color = function(stop) {
+Radient.prototype.stop = function(color, location)
+{
 }
 
-Color.prototype.angle = function(stop) {
+Radient.prototype.color = function(location)
+{
 }
 
-Color.prototype.array = function(stops) {
+Radient.prototype.angle = function(degrees)
+{
+}
+
+Radient.prototype.array = function(stops)
+{
+}
+
+Radient.prototype.toString = function()
+{
+  if (this.stops.length == 0) throw new Error("Gradients must have at least two stops");
+
+  r = [] ;
+
+  this.stops.forEach(function(element) {
+    r.push(element.location + ' ' + element.color.hexString());
+  });
+
+  return r.join("\n");
 }
 
 module.exports = Radient;
