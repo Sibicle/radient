@@ -5,8 +5,13 @@ var Radient = function(obj) {
 
   this.stops = [];
 
-  for (var i = 0; i < arguments.length; i++)
-    this.stops.push({ color: new color(arguments[i]), location: null });
+  if (Array.isArray(obj)) {
+    for (var i = 0; i < obj.length; i++)
+      this.stop(obj[i].color, obj[i].location);
+  } else {
+    for (var i = 0; i < arguments.length; i++)
+      this.stops.push({ color: new color(arguments[i]), location: null });
+  }
 
   this.distribute();
 }
@@ -127,3 +132,18 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
+
+var json = [
+  {
+    color: "rgb(0, 0, 0)",
+    location: 0.5
+  },
+  {
+    color: "#2989cc",
+    location: 0
+  },
+  {
+    color: color("white"),
+    location: 1
+  }
+];

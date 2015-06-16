@@ -56,15 +56,30 @@ gradient.stop("#f495b3", 1);
 Gradients can also be loaded from a JSON object
 
 ```js
-var json = {
-  0    : "#2989cc",
-  0.5  : "rgb(255, 255, 255)",
-  0.52 : Color().rgb(144, 106, 0),
-  0.64 : Color().cymk([16, 37, 100, 1]),
-  1    : Color("white"),
-};
+var arr = [
+  {
+    color: "rgb(255, 255, 255)",
+    location: 0.5
+  },
+  {
+    color: "#2989cc",
+    location: 0
+  },
+  {
+    color: Color("white"),
+    location: 1
+  },
+  {
+    color: Color().rgb(144, 106, 0),
+    location: 0.52
+  },
+  {
+    color: Color().cymk([16, 37, 100, 1]),
+    location: 0.64
+  }
+];
 
-var gradient = Radient(json);
+var gradient = Radient(arr);
 ```
 
 ### Colors
@@ -86,7 +101,7 @@ gradient.angle(180);
 ### Arrays
 
 You can also get an array of evenly spaced color stops. The default number of
-stops is 16. Note that this function may result in a loss of precision in your
+stops is 8. Note that this function may result in a loss of precision in your
 gradient.
 
 ```js
