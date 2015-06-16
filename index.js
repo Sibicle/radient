@@ -25,9 +25,19 @@ Radient.prototype.stop = function(c, l)
 
   if(isNaN(l)) throw new Error("Unable to determine stop location: " + l);
 
-  this.stops.push({ color: new color(c), location: l });
+  if (stop = this.stopAt(l))
+    stop.color = new color(c);
+  else
+    this.stops.push({ color: new color(c), location: l });
 
   this.sort();
+}
+
+Radient.prototype.stopAt = function(l)
+{
+  for (var i = 0; i < this.stops.length; i++)
+    if (this.stops[i].location == l)
+      return this.stops[i];
 }
 
 Radient.prototype.sort = function()
@@ -64,8 +74,3 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
-
-var g = new Radient();
-g.stop('#fff', .2);
-g.stop('#fff', 0);
-console.log(g + '');
