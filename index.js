@@ -78,9 +78,19 @@ Radient.prototype.color = function(l)
 
   ratio = ( l - left.location ) / ( right.location - left.location);
 
-  console.log(ratio);
-
   return left.color.mix(right.color, ratio);
+}
+
+Radient.prototype.mix = function(c1, c2, ratio)
+{
+  c1 = new color(c1).rgbArray();
+  c2 = new color(c2).rgbArray();
+  mixed = [];
+
+  for (var i = 0; i < c1.length; i++)
+    mixed[i] = ( c1[i] * 1 - ratio ) + ( c2[i] * (ratio));
+
+  return new color().rgb(mixed);
 }
 
 Radient.prototype.angle = function(deg)
@@ -92,6 +102,15 @@ Radient.prototype.angle = function(deg)
 Radient.prototype.array = function(num)
 {
   if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
+
+  a = [];
+  num = num || 8;
+
+  for (var i = 0; i < num; i++) {
+    a.push(this.color(i / (num - 1)).hexString());
+  }
+
+  return a;
 }
 
 Radient.prototype.toString = function()
@@ -108,5 +127,3 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
-
-g = new Radient();
