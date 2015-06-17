@@ -138,21 +138,3 @@ Radient.prototype.toString = function()
 }
 
 module.exports = Radient;
-
-var json = [
-  {
-    color: "rgb(0, 0, 0)",
-    location: 0.5
-  },
-  {
-    color: "#2989cc",
-    location: 0
-  },
-  {
-    color: color("white"),
-    location: 1
-  }
-];
-
-g = new Radient("#fff", "#000");
-console.log(g.array(5));
