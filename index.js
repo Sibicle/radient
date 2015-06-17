@@ -52,11 +52,12 @@ Radient.prototype.sort = function()
   });
 }
 
-Radient.prototype.color = function(l)
+Radient.prototype.color = function(l, mix)
 {
   if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
 
   l = parseFloat(l);
+  mix = mix || this.rgbMix;
 
   if(isNaN(l) || l < 0 || l > 1)
     throw new Error("Invalid stop location: " + l);
@@ -83,28 +84,33 @@ Radient.prototype.color = function(l)
 
   ratio = ( l - left.location ) / ( right.location - left.location);
 
-  return left.color.mix(right.color, ratio);
+  return mix(left.color, right.color, ratio);
 }
 
-Radient.prototype.mix = function(c1, c2, ratio)
+Radient.prototype.rgbMix = function(c1, c2, ratio)
 {
-  c1 = new color(c1).rgbArray();
-  c2 = new color(c2).rgbArray();
+  c1 = c1.rgbArray();
+  c2 = c2.rgbArray();
+
   mixed = [];
 
   for (var i = 0; i < c1.length; i++)
-    mixed[i] = ( c1[i] * 1 - ratio ) + ( c2[i] * (ratio));
+    mixed[i] = (c2[i] - c1[i]) * ratio + c1[i];
 
   return new color().rgb(mixed);
 }
 
-Radient.prototype.angle = function(deg)
+Radient.prototype.sassMix = function(c1, c2, ratio)
 {
-  l = deg / 360;
-  return this.color(l);
+  return c1.mix(c2, ratio);
 }
 
-Radient.prototype.array = function(num)
+Radient.prototype.angle = function(deg, mix)
+{
+  return this.color(deg / 360, mix);
+}
+
+Radient.prototype.array = function(num, mix)
 {
   if (this.stops.length < 2) throw new Error("Gradients must have at least two stops");
 
@@ -112,7 +118,7 @@ Radient.prototype.array = function(num)
   num = num || 8;
 
   for (var i = 0; i < num; i++) {
-    a.push(this.color(i / (num - 1)).hexString());
+    a.push(this.color(i / (num - 1), mix).hexString());
   }
 
   return a;
@@ -147,3 +153,6 @@ var json = [
     location: 1
   }
 ];
+
+g = new Radient("#fff", "#000");
+console.log(g.array(5));
